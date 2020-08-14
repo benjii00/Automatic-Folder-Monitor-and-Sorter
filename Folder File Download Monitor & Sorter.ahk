@@ -10,8 +10,8 @@
 ; User Variables
 ;---------------------------------------------------------------------------------------------------------------------------------------;
 	;Behaviour
-		MonitoredFolder = D:\Downloads
-		UnzipTo = D:\Downloads\Compressed
+		MonitoredFolder = C:\Users\goffb\Downloads
+		UnzipTo = C:\Users\goffb\Downloads\Uncompressed
 		HowOftenToScanInSeconds = 60 ;How long we wait before re-scanning the folder for any changes.
 		ToolTips = 1 ;Show helper popups showing what the program is doing.
 		OverWrite = 1 ;Overwrite duplicate files?
@@ -43,7 +43,7 @@
 
 ;---------------------------------------------------------------------------------------------------------------------------------------;
 ; Functions
-;---------------------------------------------------------------------------------------------------------------------------------------;	
+;---------------------------------------------------------------------------------------------------------------------------------------;
 	;Utilities
 		HasVal(haystack, needle)
 		{
@@ -54,13 +54,13 @@
 				throw Exception("Bad haystack!", -1, haystack)
 			return 0
 		}
-		
+
 		MakeFolderIfNotExist(TheFolderDir)
 		{
 			ifnotexist,%TheFolderDir%
 				FileCreateDir,%TheFolderDir%
-		}		
-		
+		}
+
 		RemoveEmptyFolders(Folder)
 		{
 			global Tooltips
@@ -84,22 +84,22 @@
 			}
 		}
 		return
-		
+
 		FindZipFiles(Folder,GoalObjectDestination)
 		{
 			global FiletypeObjectArray
 			global MonitoredFolder
 			global Tooltips
 			i = 0
-			
-			loop % FiletypeObjectArray.Count() 
+
+			loop % FiletypeObjectArray.Count()
 			{
 				i ++
 				;Get a ref to the object that holds the array of extensions we want.
-					if FiletypeObjectArray[i].Destination != GoalObjectDestination						
+					if FiletypeObjectArray[i].Destination != GoalObjectDestination
 						continue
 					o := FiletypeObjectArray[i]
-				
+
 				;Unzip
 					if o ;Without this it may end up unzipping to the root of C drive? i THINK "" defaults to C:\ when using Loop Files
 					{
@@ -112,7 +112,7 @@
 			}
 		}
 		return
-		
+
 		UnZip(FileFullName,Dir,FullPath)
 		{
 			global 7ZipLocation ;Saves having to re-pass this dir each time you use this function.
@@ -121,7 +121,7 @@
 			global Tooltips
 			global UnzipTo
 			global UnzipSuccessSound
-			
+
 			;Get filename
 				StringGetPos,ExtentPos,FileFullName,.,R
 				FileName := SubStr(FileFullName,1,ExtentPos)
@@ -133,7 +133,7 @@
 				MakeFolderIfNotExist(UnzipTo . "\" . FileName)
 				Runwait, "%7ZipLocation%" x "%FullPath%" -o"%UnzipTo%\%FileName%"
 			sleep,2000
-			
+
 			IfExist %UnzipTo%\%FileName%
 			{
 				if DeleteZipFileAfterExtract
@@ -147,7 +147,7 @@
 				msgbox,,Oh Noes!,Something went wrong and I couldn't unzip %FileName% to %UnzipTo%\%FileName%
 		}
 
-		
+
 	;Objects
 		PushFiletypeToArray(InputArray,FiletypesArray,Destination)
 		{
@@ -162,7 +162,7 @@
 			object.Destination := Destination
 			return object
 		}
-		
+
 		GetDestination(TheFile)
 		{
 			global FiletypeObjectArray
@@ -199,7 +199,7 @@
 		if RemoveEmptyFolders
 			RemoveEmptyFolders(MonitoredFolder)
 		FindZipFiles(MonitoredFolder,"Compressed")
-	
+
 	;Other
 		RemoveToolTip:
 			SetTimer, RemoveToolTip, Off
